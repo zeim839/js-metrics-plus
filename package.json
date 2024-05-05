@@ -1,5 +1,6 @@
 {
   "name": "js-metrics-plus",
+  "type": "module",
   "version": "0.1.0",
   "description": "JavaScript Metrics Library",
   "main": "dist/index.js",
@@ -19,7 +20,7 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.8",
     "chai": "^5.1.0",
-    "tsx": "^4.9.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }
 }

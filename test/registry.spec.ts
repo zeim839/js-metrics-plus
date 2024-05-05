@@ -204,14 +204,14 @@ describe("Registry", () => {
 
     // Meter.
     expect(reg.getMetersByName('my-meter').length).to.equal(1)
-    expect(Registry.isMeter(reg.getMeterList('my-meter')[0]))
+    expect(Registry.isMeter(reg.getMeterList()[0]))
       .to.be.true
     expect(reg.getMetersByName('my-meter')[0].getName())
       .to.equal('my-meter')
 
     // Timer.
     expect(reg.getTimersByName('my-timer').length).to.equal(1)
-    expect(Registry.isTimer(reg.getTimerList('my-timer')[0]))
+    expect(Registry.isTimer(reg.getTimerList()[0]))
       .to.be.true
     expect(reg.getTimersByName('my-timer')[0].getName())
       .to.equal('my-timer')
@@ -243,7 +243,7 @@ describe("Registry", () => {
   })
 
   it("Should run all healthchecks", () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       let reg = new Registry()
       reg.getOrRegisterHealthcheck('my-hc', (h: Healthcheck) => {
         resolve()

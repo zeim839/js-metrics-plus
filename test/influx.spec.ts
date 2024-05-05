@@ -5,7 +5,7 @@ import { InfluxDBv2 } from "../src/influxDBv2"
 import * as http from "http"
 
 const body = (req: http.IncomingMessage) => {
-  return new Promise((resolve) => {
+  return new Promise<string>((resolve) => {
     let body = ''
     req.on('data', (chunk) => {body += chunk})
     req.on('end', () => resolve(body))
@@ -14,7 +14,7 @@ const body = (req: http.IncomingMessage) => {
 
 describe('InfluxDBv2', () => {
   it('Should implement Reporter', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = http.createServer((req, res) => {
         res.end('okay')
       })
@@ -38,7 +38,7 @@ describe('InfluxDBv2', () => {
   })
 
   it('Should send authorization token', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = http.createServer((req, res) => {
         // req.headers renames 'Authorization' to 'authorization'
         expect(req.headers).to.have.property('authorization')
@@ -65,7 +65,7 @@ describe('InfluxDBv2', () => {
   })
 
   it('Should include bucket, org, and precision in URL', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = http.createServer((req, res) => {
         expect(req.url)
           .to.equal('/api/v2/write?org=my-org&bucket=my-bucket&precision=ms')
@@ -92,7 +92,7 @@ describe('InfluxDBv2', () => {
   })
 
   it('Should emit error when address is invalid', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const reg = new Registry()
       const influx = new InfluxDBv2({
         addr: "bad-address",
@@ -114,7 +114,7 @@ describe('InfluxDBv2', () => {
   })
 
   it('Should submit metrics once', () => {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const server = http.createServer((req, res) =>
         body(req).then((data) => {
           res.end()
@@ -161,7 +161,7 @@ describe('InfluxDBv2', () => {
   })
 
   it('Should submit metrics every flush_interval', () => {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const reg = new Registry()
       const influx = new InfluxDBv2({
         addr: "http://127.0.0.1:6969",

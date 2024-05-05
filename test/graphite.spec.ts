@@ -3,11 +3,12 @@ import { Registry } from "../src/registry"
 import { Reporter } from "../src/reporter"
 import { Graphite, GraphiteConfig } from "../src/graphite"
 import { UniformSample } from '../src/sample'
+import { Healthcheck } from '../src/healthcheck'
 import * as net from 'net'
 
 describe('Graphite', () => {
   it('Should implement Reporter', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer()
       server.listen(6969)
 
@@ -29,7 +30,7 @@ describe('Graphite', () => {
   })
 
   it('Should connect to graphite server', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.destroy()
         server.close(() => resolve())
@@ -51,7 +52,7 @@ describe('Graphite', () => {
   })
 
   it('Should submit metrics once', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
           expect(data.toString().substring(0, 10))
@@ -81,7 +82,7 @@ describe('Graphite', () => {
   })
 
   it('Should submit metrics every flush_interval', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       let graph
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
@@ -113,7 +114,7 @@ describe('Graphite', () => {
   })
 
   it('Should emit close event', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer()
       server.listen(6969)
 
@@ -136,7 +137,7 @@ describe('Graphite', () => {
   })
 
   it('Should submit healthcheck using plaintext protocol', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
           let str = data.toString()
@@ -172,14 +173,14 @@ describe('Graphite', () => {
         h.healthy()
       })
       reg.getOrRegisterHealthcheck('my-hc-bad', (h: Healthcheck) => {
-        h.unhealthy()
+        h.unhealthy(new Error())
       })
       graph.once()
     })
   })
 
   it('Should submit counter using plaintext protocol', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
           let str = data.toString()
@@ -210,7 +211,7 @@ describe('Graphite', () => {
   })
 
   it('Should submit gauge using plaintext protocol', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
           let str = data.toString()
@@ -241,7 +242,7 @@ describe('Graphite', () => {
   })
 
   it('Should submit histogram using plaintext protocol', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
           let str = data.toString()
@@ -284,7 +285,7 @@ describe('Graphite', () => {
   })
 
   it('Should submit meter using plaintext protocol', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
           let str = data.toString()
@@ -332,7 +333,7 @@ describe('Graphite', () => {
   })
 
   it('Should submit timer using plaintext protocol', () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
           let str = data.toString()
