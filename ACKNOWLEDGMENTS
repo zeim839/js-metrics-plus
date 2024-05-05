@@ -1,0 +1,10 @@
+The authors of js-metrics-plus acknowledge:
+
+Coda Hale's DropWizard Metrics, on which js-metrics-plus is based:
+https://github.com/dropwizard/metrics
+
+The Go implementation of DropWizard metrics by Richard Crowley:
+https://github.com/rcrowley/go-metrics
+
+inspector-metrics by rstiller, which inspired the js-metrics-plus registry API:
+https://github.com/rstiller/inspector-metrics
