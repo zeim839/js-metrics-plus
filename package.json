@@ -1,14 +1,16 @@
 {
   "name": "js-metrics-plus",
-  "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JavaScript Metrics Library",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx tsc -d",
     "clean": "rm -r dist",
-    "test": "npx mocha ./test/*.spec.ts"
+    "test": "npx mocha",
+    "prepublishOnly": "npm run build",
+    "lint": "npx tslint ./src/*.ts ./test/*.ts",
+    "fix": "npx tslint --fix ./src/*.ts ./test/*.ts"
   },
   "author": "zeim839",
   "license": "MIT",
@@ -20,7 +22,8 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.8",
     "chai": "^5.1.0",
-    "ts-node": "^10.9.2",
+    "tslint": "^6.1.3",
+    "tsx": "^4.9.3",
     "typescript": "^5.4.5"
   }
 }
