@@ -267,5 +267,5 @@ influx.stop()
 Yes.
 
 ## License
-[MIT](LICENSE.md) <br/>
+[MIT](LICENSE) <br/>
 Copyright (C) 2024 Michail Zeipekki
