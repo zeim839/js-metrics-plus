@@ -1,5 +1,3 @@
-import { BaseMetric, Metric } from "./metric"
-
 /**
  * An EWMA records an exponentially moving weighted average.
  *
@@ -36,6 +34,8 @@ export function newEWMA(alpha: number): EWMA {
   return new StandardEWMA(alpha)
 }
 
+// tslint:disable:max-line-length
+
 /**
  * To read more on 1,5,15- minute EWMAs, see:
  *
@@ -45,6 +45,8 @@ export function newEWMA(alpha: number): EWMA {
  * Instead of ticking, our implementation of EWMA is statically
  * updated when rate() or update() are called.
  */
+
+// tslint:enable:max-line-length
 
 /**
  * Creates a new EWMA for an exponentially weighted 1-minute
@@ -122,7 +124,7 @@ export class StandardEWMA implements EWMA {
       return this.#ewma
     }
 
-    let seconds = this.#period / 1000
+    const seconds = this.#period / 1000
     if (!this.#init) {
       this.#ewma = this.#sample / seconds
       this.#ts += this.#period
@@ -168,7 +170,7 @@ export class StandardEWMA implements EWMA {
       return
     }
 
-    let seconds = this.#period / 1000
+    const seconds = this.#period / 1000
     if (!this.#init) {
       this.#ewma = this.#sample / seconds
       this.#ts += this.#period

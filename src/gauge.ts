@@ -1,5 +1,4 @@
 import { Metric, BaseMetric } from './metric'
-import { Registry } from './registry'
 
 /**
  * A Gauge tracks a numerical value over time.
@@ -158,7 +157,7 @@ export class StandardGauge extends BaseMetric implements Gauge, Metric {
  * @implements {Gauge}
  */
 export class FunctionalGauge extends StandardGauge implements Gauge, Metric {
-  #fn : Function
+  #fn : () => any
 
   /**
    * Creates an instance of FunctionalGauge.
@@ -168,7 +167,7 @@ export class FunctionalGauge extends StandardGauge implements Gauge, Metric {
    * @param {string} [desc] optional description of the gauge.
    * @memberof FunctionalGauge
    */
-  public constructor(fn: Function, name?: string, desc?: string) {
+  public constructor(fn: () => any, name?: string, desc?: string) {
     super(name, desc)
     this.#fn = fn
   }

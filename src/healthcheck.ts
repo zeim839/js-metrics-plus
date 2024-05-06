@@ -50,9 +50,7 @@ export interface Healthcheck extends Metric {
   snapshot(): any
 }
 
-export interface HealthcheckFn {
-  (h: Healthcheck): void
-}
+export type HealthcheckFn = (h: Healthcheck) => void
 
 /**
  * A no-op implementation of Healthcheck
@@ -132,7 +130,8 @@ export class NullHealthcheck extends BaseMetric implements Metric, Healthcheck {
  * @extends {BaseMetric}
  * @implements {Healthcheck}
  */
-export class StandardHealthcheck extends BaseMetric implements Metric, Healthcheck {
+export class StandardHealthcheck extends
+BaseMetric implements Metric, Healthcheck {
   #err: Error | null = null
   #fn:  HealthcheckFn
 
@@ -199,7 +198,7 @@ export class StandardHealthcheck extends BaseMetric implements Metric, Healthche
    * @memberof StandardHealthcheck
    */
   public snapshot(): any {
-    let err = this.error()
+    const err = this.error()
     return {
       ...super.snapshot(),
       healthy: err === null,

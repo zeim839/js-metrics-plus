@@ -287,7 +287,7 @@ export class StandardMeter extends BaseMetric implements Meter {
    */
   public rateMean(): number {
     // seconds elapsed.
-    let elapsed = ((new Date()).getTime() - this.#start.getTime())/1000
+    const elapsed = ((new Date()).getTime() - this.#start.getTime())/1000
     return this.count() / (1 + elapsed)
   }
 

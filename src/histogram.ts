@@ -65,7 +65,7 @@ export interface Histogram extends Metric {
    * @returns {Array<number>}
    * @memberof Histogram
    */
-  percentiles(ps: Array<number>): Array<number>
+  percentiles(ps: number[]): number[]
 
   /**
    * Returns the underlying sample.
@@ -196,7 +196,7 @@ export class NullHistogram extends BaseMetric implements Metric, Histogram {
    * @returns {Array<number>}
    * @memberof NullHealthcheck
    */
-  public percentiles(ps: Array<number>): Array<number> { return [] }
+  public percentiles(ps: number[]): number[] { return [] }
 
   /**
    * sample is a no-op.
@@ -359,7 +359,7 @@ export class StandardHistogram extends BaseMetric implements Metric, Histogram {
    * @returns {Array<number>}
    * @memberof StandardHistogram
    */
-  public percentiles(ps: Array<number>): Array<number> {
+  public percentiles(ps: number[]): number[] {
     return this.#sample.percentiles(ps)
   }
 
@@ -421,7 +421,7 @@ export class StandardHistogram extends BaseMetric implements Metric, Histogram {
    * @memberof StandardHistogram
    */
   public snapshot(): any {
-    let ps = this.percentiles([0.5, 0.75, 0.95, 0.99, 0.999])
+    const ps = this.percentiles([0.5, 0.75, 0.95, 0.99, 0.999])
     return {
       ...super.snapshot(),
       count:    this.count(),

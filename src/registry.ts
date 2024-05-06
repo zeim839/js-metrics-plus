@@ -9,9 +9,10 @@ import { Meter, NullMeter, StandardMeter } from './meter'
 import { Timer, StandardTimer, NullTimer } from './timer'
 import { Sample } from './sample'
 
-export type NameFactory = (baseName: string, metricName: string, metric: Metric) => string
+export type NameFactory = (baseName: string,
+  metricName: string, metric: Metric) => string
 
-var _useNullMetrics = false
+let _useNullMetrics = false
 
 /**
  * useNullMetrics is checked by the constructor functions
@@ -113,7 +114,8 @@ export class Registry {
   }
 
   /**
-   * Determines if the specified object is a {@link Histogram} or references one.
+   * Determines if the specified object is a {@link Histogram}
+   * or references one.
    *
    * @static
    * @param {*} instance
@@ -149,21 +151,6 @@ export class Registry {
   }
 
   /**
-   * Standard function to generate the name for a metric.
-   *
-   * @private
-   * @static
-   * @param {string} baseName
-   * @param {string} metricName
-   * @param {Metric} metric
-   * @returns {string}
-   * @memberof Registry
-   */
-  private static defaultNameFactory (baseName: string, metricName: string, metric: Metric): string {
-    return baseName + '.' + metricName
-  }
-
-  /**
    * Default clock instance if no clock instance if provided.
    *
    * @private
@@ -179,28 +166,7 @@ export class Registry {
    * @type {Array<Registration<Metric>>}
    * @memberof Registry
    */
-  readonly #metrics: Array<Registration<Metric>> = []
-
-  /**
-   * The name factory to build metric names.
-   *
-   * @private
-   * @type {NameFactory}
-   * @memberof Registry
-   */
-  #nameFactory: NameFactory = Registry.defaultNameFactory
-
-  /**
-   * Sets the default name factory for metric instances.
-   *
-   * @param {NameFactory} nameFactory
-   * @returns {this}
-   * @memberof Registry
-   */
-  public setNameFactory (nameFactory: NameFactory): this {
-    this.#nameFactory = nameFactory
-    return this
-  }
+  readonly #metrics: Registration<Metric>[] = []
 
   /**
    * Gets the default clock.
@@ -483,18 +449,21 @@ export class Registry {
    * @returns {Healthcheck}
    * @memberof Registry
    */
-  public getOrRegisterHealthcheck(name: string, fn?: HealthcheckFn, desc?: string) : Healthcheck {
-    const hasName = this.getByName<Healthcheck>(name).length !== 0
-    if (!hasName && typeof fn === 'undefined') {
-      throw new Error('expected fn to be defined for unregistered healthcheck')
-    }
-    if (!hasName && !_useNullMetrics) {
-      this.registerMetric(new StandardHealthcheck(fn, name, desc))
-    }
-    if (!hasName && _useNullMetrics) {
-      this.registerMetric(new NullHealthcheck(fn, name, desc))
-    }
-    return this.getByName<Healthcheck>(name)[0]
+  public getOrRegisterHealthcheck(name: string,
+    fn?: HealthcheckFn, desc?: string) : Healthcheck {
+
+      const hasName = this.getByName<Healthcheck>(name).length !== 0
+      if (!hasName && typeof fn === 'undefined') {
+        // tslint:disable-next-line
+        throw new Error('expected fn to be defined for unregistered healthcheck')
+      }
+      if (!hasName && !_useNullMetrics) {
+        this.registerMetric(new StandardHealthcheck(fn, name, desc))
+      }
+      if (!hasName && _useNullMetrics) {
+        this.registerMetric(new NullHealthcheck(fn, name, desc))
+      }
+      return this.getByName<Healthcheck>(name)[0]
   }
 
   /**
@@ -507,18 +476,20 @@ export class Registry {
    * @returns {Histogram}
    * @memberof Registry
    */
-  public getOrRegisterHistogram(name: string, s?: Sample, desc?: string): Histogram {
-    const hasName = this.getByName<Histogram>(name).length !== 0
-    if (!hasName && typeof s === 'undefined') {
-      throw new Error('expected sample to be defined for unregistered histogram')
-    }
-    if (!hasName && typeof s !== 'undefined' && !_useNullMetrics) {
-      this.registerMetric(new StandardHistogram(s, name, desc))
-    }
-    if (!hasName && typeof s !== 'undefined' && _useNullMetrics) {
-      this.registerMetric(new NullHistogram(s, name, desc))
-    }
-    return this.getByName<Histogram>(name)[0]
+  public getOrRegisterHistogram(name: string,
+    s?: Sample, desc?: string): Histogram {
+      const hasName = this.getByName<Histogram>(name).length !== 0
+      if (!hasName && typeof s === 'undefined') {
+        // tslint:disable-next-line
+        throw new Error('expected sample to be defined for unregistered histogram')
+      }
+      if (!hasName && typeof s !== 'undefined' && !_useNullMetrics) {
+        this.registerMetric(new StandardHistogram(s, name, desc))
+      }
+      if (!hasName && typeof s !== 'undefined' && _useNullMetrics) {
+        this.registerMetric(new NullHistogram(s, name, desc))
+      }
+      return this.getByName<Histogram>(name)[0]
   }
 
   /**
@@ -583,7 +554,7 @@ export class Registry {
    * @memberof Registry
    */
   public runAllHealthchecks(): void {
-    let hcs = this.getHealthcheckList()
+    const hcs = this.getHealthcheckList()
     for (let i = 0; i < hcs.length; ++i) {
       hcs[i].check()
     }
@@ -595,7 +566,7 @@ export class Registry {
  *
  * @export
  */
-export var defaultRegistry = new Registry()
+export let defaultRegistry = new Registry()
 
 /**
  * Gets the list of all managed counter instances.
@@ -806,8 +777,9 @@ export function getOrRegisterHealthcheck(name: string,
  * @param {string} [desc] description for histogram (if creating).
  * @returns {Histogram}
  */
-export function getOrRegisterHistogram(name: string, s?: Sample, desc?: string): Histogram {
-  return defaultRegistry.getOrRegisterHistogram(name, s, desc)
+export function getOrRegisterHistogram(name: string,
+  s?: Sample, desc?: string): Histogram {
+    return defaultRegistry.getOrRegisterHistogram(name, s, desc)
 }
 
 /**

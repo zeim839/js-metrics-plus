@@ -61,7 +61,7 @@ export interface Sample {
    * @returns {Array<number>}
    * @memberof Sample
    */
-  percentiles(ps: Array<number>): Array<number>
+  percentiles(ps: number[]): number[]
 
   /**
    * Size returns the size of the sample, which is at
@@ -111,7 +111,7 @@ export interface Sample {
    * returns {Array<number>}
    * @memberof Sample
    */
-  values(): Array<number>
+  values(): number[]
 
   /**
    * Returns the sample variance.
@@ -133,7 +133,7 @@ export interface Sample {
 export class UniformSample implements Sample {
   #reservoirSize:    number
   protected _count:  number
-  protected _values: Array<number>
+  protected _values: number[]
 
   /**
    * Creates an instance of UniformSample.
@@ -216,7 +216,7 @@ export class UniformSample implements Sample {
    * @returns {Array<number>}
    * @memberof UniformSample
    */
-  public percentiles(ps: Array<number>): Array<number> {
+  public percentiles(ps: number[]): number[] {
     return samplePercentiles(this._values, ps)
   }
 
@@ -278,7 +278,7 @@ export class UniformSample implements Sample {
       return
     }
 
-    let r = Math.floor(Math.random() * this._count)
+    const r = Math.floor(Math.random() * this._count)
     if (r < this._values.length) {
       this._values[r] = i
     }
@@ -290,7 +290,7 @@ export class UniformSample implements Sample {
    * returns {Array<number>}
    * @memberof UniformSample
    */
-  public values(): Array<number> {
+  public values(): number[] {
     return Object.assign([], this._values)
   }
 
@@ -322,7 +322,7 @@ export class ExpDecaySample extends UniformSample implements Sample {
   #t0: Date
   #t1: Date
 
-  #values: Array<{key: number, value: number}>
+  #values: {key: number, value: number}[]
 
   // one hour.
   static rescaleThreshold = 3600000
@@ -367,22 +367,22 @@ export class ExpDecaySample extends UniformSample implements Sample {
    * @memberof ExpDecaySample
    */
   public update(i: number): void {
-    let t = new Date()
+    const t = new Date()
     this._count++
-    if (this.size() == this.#reservoirSize) {
+    if (this.size() === this.#reservoirSize) {
       this._values.pop()
     }
 
-    let f = Math.floor(Math.random() * this._count)
-    let elapsed = (t.getTime() - this.#t0.getTime())/1000
+    const f = Math.floor(Math.random() * this._count)
+    const elapsed = (t.getTime() - this.#t0.getTime())/1000
     this.#values.push({
       key: Math.exp(elapsed*this.#alpha) / f,
       value: i,
     })
 
     if (t > this.#t1) {
-      let values = this.#values
-      let t0 = this.#t0
+      const values = this.#values
+      const t0 = this.#t0
       this.#values = []
       this.#t0 = t
       this.#t1.setTime(this.#t0.getTime() +
@@ -396,7 +396,7 @@ export class ExpDecaySample extends UniformSample implements Sample {
   }
 }
 
-function sampleMax(vals: Array<number>): number {
+function sampleMax(vals: number[]): number {
   if (vals.length === 0) {
     return 0
   }
@@ -409,14 +409,14 @@ function sampleMax(vals: Array<number>): number {
   return max
 }
 
-function sampleMean(vals: Array<number>): number {
+function sampleMean(vals: number[]): number {
   if (vals.length === 0) {
     return 0
   }
   return sampleSum(vals) / vals.length
 }
 
-function sampleMin(vals: Array<number>): number {
+function sampleMin(vals: number[]): number {
   if (vals.length === 0) {
     return 0
   }
@@ -429,30 +429,30 @@ function sampleMin(vals: Array<number>): number {
   return min
 }
 
-function samplePercentile(vals: Array<number>, p: number): number {
+function samplePercentile(vals: number[], p: number): number {
   return samplePercentiles(vals, [p])[0]
 }
 
-function samplePercentiles(vals: Array<number>, ps: Array<number>): Array<number> {
-  let scores = new Array<number>(ps.length)
+function samplePercentiles(vals: number[], ps: number[]): number[] {
+  const scores = new Array<number>(ps.length)
   if (vals.length === 0) {
     for (let i = 0; i < ps.length; ++i) {
       scores[i] = 0
     }
     return scores
   }
-  let len = vals.length
+  const len = vals.length
   if (len > 0) {
     vals.sort()
-    for (const [i, p] of Object.entries(ps)) {
-      let pos = p * (len + 1)
+    for (let i = 0; i < ps.length; ++i) {
+      const pos = ps[i] * (len + 1)
       if (pos < 1) {
         scores[i] = vals[0]
       } else if (pos >= len) {
         scores[i] = vals[len - 1]
       } else {
-        let lower = vals[pos-1]
-        let upper = vals[pos]
+        const lower = vals[pos-1]
+        const upper = vals[pos]
         scores[i] = lower + (pos-Math.floor(pos))*(upper-lower)
       }
     }
@@ -460,11 +460,11 @@ function samplePercentiles(vals: Array<number>, ps: Array<number>): Array<number
   return scores
 }
 
-function sampleStdDev(vals: Array<number>): number {
+function sampleStdDev(vals: number[]): number {
   return Math.sqrt(sampleVariance(vals))
 }
 
-function sampleSum(vals: Array<number>): number {
+function sampleSum(vals: number[]): number {
   let sum = 0
   for (let i = 0; i < vals.length; ++i) {
     sum += vals[i]
@@ -472,14 +472,14 @@ function sampleSum(vals: Array<number>): number {
   return sum
 }
 
-function sampleVariance(vals: Array<number>): number {
+function sampleVariance(vals: number[]): number {
   if (vals.length === 0) {
     return 0
   }
-  let m = sampleMean(vals)
+  const m = sampleMean(vals)
   let sum = 0
   for (let i = 0; i < vals.length; ++i) {
-    let d = vals[i] - m
+    const d = vals[i] - m
     sum += d * d
   }
   return sum / vals.length

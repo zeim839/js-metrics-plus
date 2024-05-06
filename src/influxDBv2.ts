@@ -49,7 +49,7 @@ export class InfluxDBv2 extends Reporter {
     this.#resCb = this.defaultResCb
     this.#config = config
 
-    let url = `${this.#config.addr}/api/v2/write?org=` +
+    const url = `${this.#config.addr}/api/v2/write?org=` +
       `${this.#config.org}&bucket=${this.#config.bucket}&precision=ms`
 
     this.#caller = axios.create({
@@ -70,7 +70,7 @@ export class InfluxDBv2 extends Reporter {
    */
   public once(): void {
     let payload = ""
-    let metrics = this.#config.registry.getMetricList()
+    const metrics = this.#config.registry.getMetricList()
     for (let i = 0; i < metrics.length; ++i) {
       payload += this.reporter(metrics[i])
     }
@@ -111,8 +111,8 @@ export class InfluxDBv2 extends Reporter {
    * @memberof InfluxDBv2
    */
   private reporter(m: Metric): string {
-    let ts = Date.now()
-    let name = m.getName()
+    const ts = Date.now()
+    const name = m.getName()
     if (Registry.isCounter(m)) {
       return `${name} counter=${(m as Counter).count()} ${ts}\n`
     }
@@ -122,7 +122,7 @@ export class InfluxDBv2 extends Reporter {
     }
 
     if (Registry.isHistogram(m)) {
-      let h = (m as Histogram).snapshot()
+      const h = (m as Histogram).snapshot()
       return `${name} count=${h.count},min=${h.min},max=${h.max},` +
         `mean=${h.mean},sum=${h.sum},stddev=${h.stddev},` +
         `variance=${h.variance},median=${h.median},` +
@@ -131,13 +131,13 @@ export class InfluxDBv2 extends Reporter {
     }
 
     if (Registry.isMeter(m)) {
-      let s = (m as Meter).snapshot()
+      const s = (m as Meter).snapshot()
       return `${name} count=${s.count},rate_1min=${s.rate1},rate_5min=${s.rate5},`+
         `rate_15min=${s.rate15},rate_mean=${s.rateMean} ${ts}\n`
     }
 
     if (Registry.isTimer(m)) {
-      let t = (m as Timer).snapshot()
+      const t = (m as Timer).snapshot()
       return `${name} count=${t.count},min=${t.min},max=${t.max},mean=${t.mean},` +
         `sum=${t.sum},stddev=${t.stddev},variance=${t.variance},median=${t.median},` +
         `percentile_75=${t.percentile._75},percentile_95=${t.percentile._95},` +

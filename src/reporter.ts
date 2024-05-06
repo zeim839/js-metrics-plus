@@ -43,8 +43,8 @@ export abstract class Reporter {
    * @memberof Reporter
    */
   private defaultWriter(m: Metric): void {
-    let name = m.getName()
-    let ts = Math.floor(Date.now() / 1000)
+    const name = m.getName()
+    const ts = Math.floor(Date.now() / 1000)
     if (Registry.isCounter(m)) {
       console.log(`[METRIC] ${name} ${(m as Counter).count()} ${ts}`)
       return
@@ -56,7 +56,7 @@ export abstract class Reporter {
     }
 
     if (Registry.isHistogram(m)) {
-      let h = (m as Histogram).snapshot()
+      const h = (m as Histogram).snapshot()
       console.log(`[METRIC] ${name}.count ${h.count} ${ts} \n`)
       console.log(`[METRIC] ${name}.min ${h.min} ${ts} \n`)
       console.log(`[METRIC] ${name}.max ${h.max} ${ts} \n`)
@@ -73,7 +73,7 @@ export abstract class Reporter {
     }
 
     if (Registry.isMeter(m)) {
-      let s = (m as Meter).snapshot()
+      const s = (m as Meter).snapshot()
       console.log(`[METRIC] ${name}.count ${s.count} ${ts} \n`)
       console.log(`[METRIC] ${name}.rate.1min ${s.rate1} ${ts} \n`)
       console.log(`[METRIC] ${name}.rate.5min ${s.rate5} ${ts} \n`)
@@ -83,7 +83,7 @@ export abstract class Reporter {
     }
 
     if (Registry.isTimer(m)) {
-      let t = (m as Timer).snapshot()
+      const t = (m as Timer).snapshot()
       console.log(`[METRIC] ${name}.count ${t.count} ${ts} \n`)
       console.log(`[METRIC] ${name}.min ${t.min} ${ts} \n`)
       console.log(`[METRIC] ${name}.max ${t.max} ${ts} \n`)
@@ -111,7 +111,7 @@ export abstract class Reporter {
    * @memberof Reporter
    */
   public once(): void {
-    let metrics = this.#reg.getMetricList()
+    const metrics = this.#reg.getMetricList()
     for (let i = 0; i < metrics.length; ++i) {
       this.defaultWriter(metrics[i])
     }

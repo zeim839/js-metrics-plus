@@ -11,8 +11,8 @@ export interface Time {
 
 /**
  * Gets the time elapsed from parameter one to parameter two in nanoseconds.
- *
- * Also assumes that the first point in time is older than the second point in time.
+ * Also assumes that the first point in time is older than the second
+ * point in time.
  *
  * @export
  * @param {Time} one time sample
@@ -37,7 +37,8 @@ export function diff (one: Time, two: Time): number {
  */
 export abstract class Clock {
   /**
-   * Gets the current point in time according to the logic of the clock implementation.
+   * Gets the current point in time according to the logic of the
+   * clock implementation.
    *
    * @abstract
    * @returns {Time}

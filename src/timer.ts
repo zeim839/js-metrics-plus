@@ -60,7 +60,7 @@ export interface Timer extends Metric {
    * @returns {Array<number>}
    * @memberof Timer
    */
-  percentiles(ps: Array<number>): Array<number>
+  percentiles(ps: number[]): number[]
 
   /**
    * Gets the 1-minute event rate.
@@ -125,7 +125,7 @@ export interface Timer extends Metric {
    * @param {Function} [f] the function to record
    * @memberof Timer
    */
-  time(f: Function): void
+  time(f: () => any): void
 
   /**
    * Records the duration of an event.
@@ -224,7 +224,7 @@ export class NullTimer extends BaseMetric implements Metric, Timer {
    * @returns {Array<number>}
    * @memberof NullTimer
    */
-  public percentiles(ps: Array<number>): Array<number> { return [] }
+  public percentiles(ps: number[]): number[] { return [] }
 
   /**
    * rate1 is a no-op.
@@ -303,7 +303,7 @@ export class NullTimer extends BaseMetric implements Metric, Timer {
    * @param {Function} [f] the function to record
    * @memberof NullTimer
    */
-  public time(f: Function): void {}
+  public time(f: () => any): void {}
 
   /**
    * update is a no-op.
@@ -425,7 +425,7 @@ export class StandardTimer extends BaseMetric implements Metric, Timer {
    * @returns {Array<number>}
    * @memberof StandardTimer
    */
-  public percentiles(ps: Array<number>): Array<number> {
+  public percentiles(ps: number[]): number[] {
     return this.#hist.percentiles(ps)
   }
 
@@ -500,8 +500,8 @@ export class StandardTimer extends BaseMetric implements Metric, Timer {
    * @param {Function} [f] the function to record
    * @memberof StandardTimer
    */
-  public time(f: Function): void {
-    let now = new Date()
+  public time(f: () => any): void {
+    const now = new Date()
     f()
     this.updateSince(now)
   }

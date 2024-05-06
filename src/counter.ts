@@ -1,5 +1,4 @@
 import { Metric, BaseMetric } from './metric'
-import { Registry } from './registry'
 
 /**
  * A counter represents a number that can be increased

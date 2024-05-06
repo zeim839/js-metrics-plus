@@ -1,7 +1,7 @@
 import { expect } from "chai"
 import { Registry } from "../src/registry"
 import { Reporter } from "../src/reporter"
-import { Graphite, GraphiteConfig } from "../src/graphite"
+import { Graphite } from "../src/graphite"
 import { UniformSample } from '../src/sample'
 import { Healthcheck } from '../src/healthcheck'
 import * as net from 'net'
@@ -25,7 +25,7 @@ describe('Graphite', () => {
       graph.onError(() => {})
 
       server.close(() => resolve())
-      expect(graph instanceof Reporter).to.be.true
+      expect(graph instanceof Reporter).to.equal(true)
     })
   })
 
@@ -83,7 +83,7 @@ describe('Graphite', () => {
 
   it('Should submit metrics every flush_interval', () => {
     return new Promise<void>((resolve) => {
-      let graph
+      let graph : Graphite
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
           expect(data.toString().substring(0, 10))
@@ -140,7 +140,7 @@ describe('Graphite', () => {
     return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
-          let str = data.toString()
+          const str = data.toString()
           expect(str.length).to.equal(63)
 
           expect(str.substring(0, 18)).to.equal('my-hc-good.healthy')
@@ -183,7 +183,7 @@ describe('Graphite', () => {
     return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
-          let str = data.toString()
+          const str = data.toString()
           expect(str.length).to.equal(24)
           expect(str.substring(0,10)).to.equal('my-counter')
           expect(str.substring(11,12)).to.equal('5')
@@ -214,7 +214,7 @@ describe('Graphite', () => {
     return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
-          let str = data.toString()
+          const str = data.toString()
           expect(str.length).to.equal(22)
           expect(str.substring(0,8)).to.equal('my-gauge')
           expect(str.substring(9,10)).to.equal('7')
@@ -245,7 +245,7 @@ describe('Graphite', () => {
     return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
-          let str = data.toString()
+          const str = data.toString()
           expect(str.length).to.equal(367)
 
           expect(str.substring(0,13)).to.equal('my-hist.count')
@@ -288,7 +288,7 @@ describe('Graphite', () => {
     return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
-          let str = data.toString()
+          const str = data.toString()
 
           // sometimes meter.rate.min gives unpredictable
           // unpredictable results like 6.99987...
@@ -336,7 +336,7 @@ describe('Graphite', () => {
     return new Promise<void>((resolve) => {
       const server = net.createServer((conn) => {
         conn.on('data', (data) => {
-          let str = data.toString()
+          const str = data.toString()
           expect(str.length).to.equal(465)
 
           expect(str.substring(0,11)).to.equal('timer.count')

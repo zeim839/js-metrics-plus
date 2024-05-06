@@ -50,8 +50,9 @@ export interface Metric {
 
 export abstract class BaseMetric implements Metric {
   /**
-   * A static number instance to give an unique id within an application instance.
-   * This counter is only unique per process, forked processes start from 0.
+   * A static number instance to give an unique id
+   * within an application instance. This counter is
+   * only unique per process, forked processes start from 0.
    *
    * @private
    * @static

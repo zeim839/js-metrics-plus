@@ -122,7 +122,7 @@ export class Graphite extends Reporter {
    * @memberof Graphite
    */
   public once(): void {
-    let metrics = this.#config.registry.getMetricList()
+    const metrics = this.#config.registry.getMetricList()
     for (let i = 0; i < metrics.length; ++i) {
       this.reporter(metrics[i])
     }
@@ -156,8 +156,8 @@ export class Graphite extends Reporter {
    * @memberof Graphite
    */
   private reporter(m: Metric) {
-    let name = this.getProperName(m)
-    let ts = Math.floor(Date.now() / 1000)
+    const name = this.getProperName(m)
+    const ts = Math.floor(Date.now() / 1000)
     if (Registry.isCounter(m)) {
       this.#socket.write(`${name} ${(m as Counter).count()} ${ts}\n`)
       return
@@ -169,12 +169,12 @@ export class Graphite extends Reporter {
     }
 
     if (Registry.isHealthcheck(m)) {
-      let hc = (m as Healthcheck).snapshot()
+      const hc = (m as Healthcheck).snapshot()
       this.#socket.write(`${name}.healthy ${(hc.healthy) ? 1 : 0} ${ts}\n`)
     }
 
     if (Registry.isHistogram(m)) {
-      let h = (m as Histogram).snapshot()
+      const h = (m as Histogram).snapshot()
       this.#socket.write(`${name}.count ${h.count} ${ts}\n`)
       this.#socket.write(`${name}.max ${h.max} ${ts}\n`)
       this.#socket.write(`${name}.mean ${h.mean} ${ts}\n`)
@@ -186,12 +186,13 @@ export class Graphite extends Reporter {
       this.#socket.write(`${name}.percentile.75 ${h.percentile._75} ${ts}\n`)
       this.#socket.write(`${name}.percentile.95 ${h.percentile._95} ${ts}\n`)
       this.#socket.write(`${name}.percentile.99 ${h.percentile._99} ${ts}\n`)
+      // tslint:disable-next-line
       this.#socket.write(`${name}.percentile.99_9 ${h.percentile._99_9} ${ts}\n`)
       return
     }
 
     if (Registry.isMeter(m)) {
-      let s = (m as Meter).snapshot()
+      const s = (m as Meter).snapshot()
       this.#socket.write(`${name}.count ${s.count} ${ts}\n`)
       this.#socket.write(`${name}.rate.1min ${s.rate1} ${ts}\n`)
       this.#socket.write(`${name}.rate.5min ${s.rate5} ${ts}\n`)
@@ -201,7 +202,7 @@ export class Graphite extends Reporter {
     }
 
     if (Registry.isTimer(m)) {
-      let t = (m as Timer).snapshot()
+      const t = (m as Timer).snapshot()
       this.#socket.write(`${name}.count ${t.count} ${ts}\n`)
       this.#socket.write(`${name}.min ${t.min} ${ts}\n`)
       this.#socket.write(`${name}.max ${t.max} ${ts}\n`)
@@ -213,6 +214,7 @@ export class Graphite extends Reporter {
       this.#socket.write(`${name}.percentile.75 ${t.percentile._75} ${ts}\n`)
       this.#socket.write(`${name}.percentile.95 ${t.percentile._95} ${ts}\n`)
       this.#socket.write(`${name}.percentile.99 ${t.percentile._99} ${ts}\n`)
+      // tslint:disable-next-line
       this.#socket.write(`${name}.percentile.99_9 ${t.percentile._99_9} ${ts}\n`)
       this.#socket.write(`${name}.rate.1min ${t.rate1} ${ts}\n`)
       this.#socket.write(`${name}.rate.5min ${t.rate5} ${ts}\n`)
